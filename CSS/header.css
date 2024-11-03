@@ -1,0 +1,78 @@
+.header{
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+}
+.left-section{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.name{
+  font-family: Roboto, Arial;
+  font-weight: 700;
+  font-size: 35px;
+  color: white;
+  margin-left: 20px;
+  position:relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.right-section{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.navigation a{
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: Roboto, Arial;
+  margin-left: 25px;
+  font-size: 19px;
+}
+.navigation a::after{
+  content: '';
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  background: white;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: transform 0.6s;
+}
+.navigation a:hover::after{
+  transform: scaleX(1);
+}
+.login{
+  font-family: Roboto, Arial;
+  font-size: 19px;
+  font-weight: 500;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-right: 20px;
+  margin-left: 25px;
+  background: transparent;
+  justify-content: center;
+  border-color: rgb(192, 192, 192);
+  border-width: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.login:hover{
+  background: rgb(41, 41, 41);
+}
