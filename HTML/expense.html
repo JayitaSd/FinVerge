@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: url("../image/backfinal2.jpeg") no-repeat;
+            background-size: cover;
+            background-position:center ;
+        }
+
+        h1 {
+            color: white;
+        }
+        h2 {
+            color: white;
+        }
+        .finverge {
+            position: absolute; /* Positioning the text */
+            top: 20px; /* Distance from the top */
+            left: 20px; /* Distance from the left */
+            font-family: 'Roboto', sans-serif; /* Using Roboto font */
+            font-weight: 700; /* Font weight */
+            font-size: 35px; /* Font size */
+            color: white; /* Text color */
+        }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 15px 20px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #expenseList {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .expense-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            border-radius: 5px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: #ff4c4c;
+        }
+
+        .delete-btn:hover {
+            background-color: #e63939;
+        }
+
+        #totalExpense, #balance {
+            font-weight: bold;
+            color: white;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="finverge">Finverge</div> <!-- Added Finverge text -->
+
+    <h1>Expense Tracker</h1>
+
+    <div class="form-group">
+        <input type="number" id="monthlyIncome" placeholder="Monthly Income (in ₹)" required>
+    </div>
+    <div class="form-group">
+        <input type="text" id="expenseName" placeholder="Expense Name" required>
+    </div>
+    <div class="form-group">
+        <input type="number" id="expenseAmount" placeholder="Expense Amount (in ₹)" required>
+    </div>
+    <button id="addExpenseBtn">Add Expense</button>
+
+    <h2>Expenses</h2>
+    <div id="expenseList"></div>
+
+    <div id="totalExpense">Total Expenses: ₹0</div>
+    <div id="balance">Remaining Balance: ₹0</div>
+
+    <script>
+      let totalExpenses = 0;
+      let monthlyIncome = 0;
+  
+      document.getElementById("monthlyIncome").addEventListener("change", function() {
+          monthlyIncome = parseFloat(this.value);
+          updateBalance();  // Update balance when income is entered
+      });
+  
+      document.getElementById("addExpenseBtn").addEventListener("click", function() {
+          const expenseName = document.getElementById("expenseName").value;
+          const expenseAmount = parseFloat(document.getElementById("expenseAmount").value);
+          
+          if (expenseName && !isNaN(expenseAmount)) {
+              addExpense(expenseName, expenseAmount);
+              document.getElementById("expenseName").value = '';  // Clear input
+              document.getElementById("expenseAmount").value = '';  // Clear input
+          } else {
+              alert("Please enter valid expense details.");
+          }
+      });
+  
+      function addExpense(name, amount) {
+          const expenseList = document.getElementById("expenseList");
+          const expenseItem = document.createElement("div");
+          expenseItem.classList.add("expense-item");
+          expenseItem.textContent = `${name}: ₹${amount.toFixed(2)}`;
+          
+          const deleteButton = document.createElement("button");
+          deleteButton.classList.add("delete-btn");
+          deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", function() {
+              expenseList.removeChild(expenseItem);
+              totalExpenses -= amount;
+              updateTotalExpenses();
+              updateBalance();
+          });
+  
+          expenseItem.appendChild(deleteButton);
+          expenseList.appendChild(expenseItem);
+  
+          totalExpenses += amount;
+          updateTotalExpenses();
+          updateBalance();
+      }
+  
+      function updateTotalExpenses() {
+          document.getElementById("totalExpense").textContent = `Total Expenses: ₹${totalExpenses.toFixed(2)}`;
+      }
+  
+      function updateBalance() {
+          const balance = monthlyIncome - totalExpenses;
+          document.getElementById("balance").textContent = `Remaining Balance: ₹${balance.toFixed(2)}`;
+      }
+    </script>
+
+</body>
+</html>

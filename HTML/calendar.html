@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Loan Payment Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url("../image/backfinal2.jpeg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Header styling for FINVERGE */
+        .header {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700; /* Bold weight */
+            font-size: 35px; /* Font size */
+            text-align: left; /* Align text to the left */
+            margin: 20px; /* Space around the header */
+            color: white; /* Change header text color to white */
+        }
+
+        /* Main title styling */
+        h1 {
+            color: white; /* Change h1 text color to white */
+        }
+
+        /* Form styling */
+        #paymentForm {
+            margin: 20px 0;
+        }
+
+        #paymentForm label {
+            font-size: 1.2em;
+            margin: 5px;
+            color: white; /* Change label text color to white */
+        }
+
+        #paymentForm input {
+            font-size: 1.2em;
+            margin: 5px;
+            color: white; /* Change input text color to white */
+            background-color: rgba(255, 255, 255, 0.3); /* Slightly transparent background */
+            border: 1px solid #ccc; /* Optional: Border styling */
+            border-radius: 5px; /* Optional: Rounded corners */
+        }
+
+        /* Calendar layout styling */
+        .calendar-container {
+            max-width: 600px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .day {
+            padding: 20px;
+            font-size: 1.2em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .payment-day {
+            background-color: #4CAF50;
+            color: #fff;
+            font-weight: bold;
+            border: 2px solid #4CAF50;
+        }
+
+        /* Header styling for month and weekday names */
+        .month-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            color: white;
+        }
+
+        .day-header {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .nav-buttons button {
+            font-size: 1em;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-buttons button:disabled {
+            background-color: #4CAF50;
+        }
+
+        /* Button styling for generate calendar */
+        #paymentForm button {
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            border: none; /* No border */
+            padding: 10px 20px; /* Padding for button */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1.2em; /* Increase font size */
+            margin-top: 10px; /* Space above the button */
+            cursor: pointer; /* Pointer cursor */
+            display: block; /* Make it a block element */
+            margin-left: auto; /* Center alignment */
+            margin-right: auto; /* Center alignment */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">FinVerge</div> <!-- Added header here -->
+
+    <h1>Loan Payment Calendar</h1>
+
+    <form id="paymentForm">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" required>
+       
+        <label for="numMonths">Number of Months:</label>
+        <input type="number" id="numMonths" placeholder="E.g., 12" required>
+       
+        <button type="submit">Generate Calendar</button>
+    </form>
+
+    <div class="calendar-container">
+        <div class="month-title" id="monthTitle"></div>
+        <div id="calendar" class="calendar"></div>
+        <div class="nav-buttons">
+            <button id="prevMonth" disabled>Previous</button>
+            <button id="nextMonth" disabled>Next</button>
+        </div>
+    </div>
+
+    <script>
+        let paymentDates = [];
+        let currentMonthIndex = 0;
+
+        document.getElementById("paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+           
+            const startDate = new Date(document.getElementById("startDate").value);
+            const numMonths = parseInt(document.getElementById("numMonths").value);
+            paymentDates = [];
+            currentMonthIndex = 0;
+
+            let currentDate = new Date(startDate);
+            for (let i = 0; i < numMonths; i++) {
+                let paymentDate = new Date(currentDate);
+                paymentDates.push(paymentDate);
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+
+            showMonth(currentMonthIndex);
+        });
+
+        function showMonth(index) {
+            const calendar = document.getElementById("calendar");
+            const monthTitle = document.getElementById("monthTitle");
+            const prevButton = document.getElementById("prevMonth");
+            const nextButton = document.getElementById("nextMonth");
+
+            calendar.innerHTML = "";  // Clear previous month
+            const paymentDate = paymentDates[index];
+            const month = paymentDate.getMonth();
+            const year = paymentDate.getFullYear();
+
+            monthTitle.innerText = `${paymentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+            // Generate weekday headers
+            ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
+                let dayHeader = document.createElement("div");
+                dayHeader.classList.add("day", "day-header");
+                dayHeader.innerText = day;
+                calendar.appendChild(dayHeader);
+            });
+
+            // Fill in blank days at the beginning of the month
+            const firstDay = new Date(year, month, 1).getDay();
+            for (let blank = 0; blank < firstDay; blank++) {
+                let blankDay = document.createElement("div");
+                blankDay.classList.add("day");
+                calendar.appendChild(blankDay);
+            }
+
+            // Add days in the month
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dayElement = document.createElement("div");
+                dayElement.classList.add("day");
+                dayElement.innerText = day;
+               
+                // Mark payment day
+                if (day === paymentDate.getDate()) {
+                    dayElement.classList.add("payment-day");
+                }
+               
+                calendar.appendChild(dayElement);
+            }
+
+            // Enable or disable navigation buttons
+            prevButton.disabled = index === 0;
+            nextButton.disabled = index === paymentDates.length - 1;
+        }
+
+        document.getElementById("prevMonth").addEventListener("click", function() {
+            if (currentMonthIndex > 0) {
+                currentMonthIndex--;
+                showMonth(currentMonthIndex);
+            }
+        });
+
+        document.getElementById("nextMonth").addEventListener("click", function() {
+            if (currentMonthIndex < paymentDates.length - 1) {
+                currentMonthIndex++;
+                showMonth(currentMonthIndex);
+            }
+        });
+    </script>
+
+</body>
+</html>

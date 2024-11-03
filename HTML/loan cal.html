@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/laoncal.css">
+</head>
+<body>
+    <div class="comp">FinVerge</div>
+    <div class="random">
+        <div class="container">
+            <div class="name">FinVerge Loan Calculator</div>
+            <div class="input-group">
+                <label for="principal">Principal Amount (P):</label>
+                <input type="number" id="principal" placeholder="Enter principal amount">
+            </div>
+            <div class="input-group">
+                <label for="rate">Rate of Interest (r):</label>
+                <input type="number" step="0.01" id="rate" placeholder="Enter annual interest rate (%)">
+            </div>
+            <div class="input-group">
+                <label for="payments">Number of Payments (n):</label>
+                <input type="number" id="payments" placeholder="Enter number of months">
+            </div>
+            <button class="b1" onclick="calculateLoan()">Calculate Loan</button>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateLoan() {
+            // Get user input values
+            let principal = document.getElementById('principal').value;
+            let rate = document.getElementById('rate').value;
+            let payments = document.getElementById('payments').value;
+
+            // Convert annual rate to monthly and decimal
+            let monthlyRate = (rate / 100) / 12;
+
+            // Calculate the monthly installment using the formula: 
+            // P * r * (1+r)^n / [(1+r)^n - 1]
+            let numerator = principal * monthlyRate * Math.pow(1 + monthlyRate, payments);
+            let denominator = Math.pow(1 + monthlyRate, payments) - 1;
+            let monthlyInstallment = numerator / denominator;
+
+            // Check if inputs are valid
+            if (isNaN(monthlyInstallment) || !isFinite(monthlyInstallment)) {
+                document.getElementById('result').innerHTML = "Please enter valid input values.";
+            } else {
+              document.getElementById('result').innerHTML = `Monthly Installment: ₹${monthlyInstallment.toFixed(2)}`;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
